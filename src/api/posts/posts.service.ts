@@ -11,4 +11,14 @@ export class PostsService {
     const createPost = await this.postRepository.createPost(dto);
     return createPost;
   }
+
+  async listPosts(dto: PostsDTO) {
+    const listPosts = await this.postRepository.createPost(dto);
+    return listPosts;
+  }
+
+  async readPost(dto: PostsDTO) {
+    const readPost = await this.postRepository.createPost(dto);
+    return readPost;
+  }
 }
