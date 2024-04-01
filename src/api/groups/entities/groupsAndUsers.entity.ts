@@ -1,12 +1,20 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
 @Entity()
-export class TagsEntity {
+export class PostsEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  //   @OneToOne()
+  groups_id: number;
+
+  @Column()
+  //   @OneToOne()
+  users_id: string;
+
+  @Column()
+  status: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_date: Date;
