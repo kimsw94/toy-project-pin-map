@@ -7,12 +7,12 @@ import {
     UseGuards,
     InternalServerErrorException,
   } from '@nestjs/common';
-  import { PostsDTO } from '../../dtos/posts.dto';
   import { Request, Response } from 'express';
   import { PostsService } from '../../posts.service';
   import { JwtAuthGuard } from 'src/jwt/jwt.guard';
   import { JwtSecretRequestType, JwtService } from '@nestjs/jwt';
   import { LikesService } from './likes.service';
+  import { LikesDTO } from './dtos/likes.dto';
   
   @Controller('likes')
   export class LikesController {
@@ -23,14 +23,14 @@ import {
   
     @Post('create')
     @UseGuards(JwtAuthGuard)
-    async createLike(@Body() dto: PostsDTO) {
+    async createLike(@Body() dto: LikesDTO) {
       const createLike = await this.likesService.createLike(dto);
       return createLike;
     }
 
     @Post('delete')
     @UseGuards(JwtAuthGuard)
-    async deleteLike(@Body() dto: PostsDTO) {
+    async deleteLike(@Body() dto: LikesDTO) {
       const deleteLike = await this.likesService.deleteLike(dto);
       return deleteLike;
     }

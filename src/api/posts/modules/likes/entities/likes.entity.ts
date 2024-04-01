@@ -1,13 +1,15 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
 @Entity()
-export class PostsEntity {
+export class LikesEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-//   @OneToOne()
-  groupInfoId: number;
+  users_id: number;
+
+  @Column()
+  posts_id: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_date: Date;

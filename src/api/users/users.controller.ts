@@ -5,13 +5,12 @@ import {
     Req,
     Res,
     UseGuards,
-    InternalServerErrorException,
   } from '@nestjs/common';
   import { UsersDTO } from './dtos/users.dto';
   import { Request, Response } from 'express';
   import { UsersService } from './users.service';
   import { JwtAuthGuard } from 'src/jwt/jwt.guard';
-  import { JwtSecretRequestType, JwtService } from '@nestjs/jwt';
+  import { JwtService } from '@nestjs/jwt';
   
   @Controller('users')
   export class UsersController {

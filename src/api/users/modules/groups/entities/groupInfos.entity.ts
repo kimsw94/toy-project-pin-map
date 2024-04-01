@@ -1,17 +1,16 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
 @Entity()
-export class PostsEntity {
+export class GroupInfosEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   //   @OneToOne()
-  groupInfoId: number;
+  group_id: number;
 
   @Column()
-  //   @OneToOne()
-  groupInfoName: string;
+  name: string;
 
   @Column()
   description: string;
