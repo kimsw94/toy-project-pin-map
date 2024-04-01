@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
+import { PostsModule } from './posts/posts.module';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -32,6 +34,8 @@ dotenv.config({ path: path.resolve(envPath) });
       entities: [],
       synchronize: false,
     }),
+    UsersModule,
+    PostsModule,
   ],
   controllers: [],
   providers: [
