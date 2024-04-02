@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './api/users/users.module';
-import { PostsModule } from './api/posts/posts.module';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -35,7 +34,6 @@ dotenv.config({ path: path.resolve(envPath) });
       synchronize: false,
     }),
     UsersModule,
-    PostsModule,
   ],
   controllers: [],
   providers: [

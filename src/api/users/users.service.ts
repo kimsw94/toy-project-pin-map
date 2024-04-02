@@ -4,8 +4,8 @@ import {
     InternalServerErrorException,
     BadRequestException,
   } from '@nestjs/common';
-  import { UsersRepository } from './repos/users.repository';
-  import { UsersEntity } from './entities/users.entity';
+  import { UsersRepository } from '../../repo/users.repository';
+  import { UsersEntity } from '../../entities/users.entity';
   import { UsersDTO } from './dtos/users.dto';
   import * as bcrypt from 'bcrypt';
   import { JwtService } from '@nestjs/jwt';
