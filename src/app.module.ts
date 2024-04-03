@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './api/users/users.module';
+import { UsersEntity } from './entities/users.entity';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 let envPath: string;
 switch (process.env.APP_ENV) {
@@ -30,13 +33,16 @@ dotenv.config({ path: path.resolve(envPath) });
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [],
+      entities: [UsersEntity],
       synchronize: false,
+      migrationsRun: false, // 서버 구동 시 작성된 마이그레이션 파일을 기반으로 마이그레이션을 수행하게 할지 설정하는 옵션. false로 설정하여 직접 CLI로 마이그레이션 수행
+      migrations: [__dirname + '/**/migrations/*.ts}'], // 마이그레이션을 수행할 파일이 관리되는 경로 설정
+      migrationsTableName: 'migrations', // 마이그레이션 이력이 기록되는 테이블 이름 설정
     }),
     UsersModule,
   ],
-  controllers: [],
-  providers: [
-  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
+
 export class AppModule {}

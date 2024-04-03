@@ -3,7 +3,6 @@ import { UsersService } from '../api/users/users.service'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { JwtExtractorFromHeaders } from 'src/common/utils/jwt-extract'
 import { ConfigService } from '@nestjs/config'
 import * as dotenv from 'dotenv'
 
