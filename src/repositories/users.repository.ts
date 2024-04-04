@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { UsersEntity } from '../entities/users.entity';
+import { UsersEntity } from 'src/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { UsersDTO } from 'src/api/users/dtos/users.dto';
 import * as bcrypt from 'bcrypt';

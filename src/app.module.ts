@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './api/users/users.module';
-import { UsersEntity } from './entities/users.entity';
+import { UsersEntity } from './entities/user.entity';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 let envPath: string;
+
 switch (process.env.APP_ENV) {
   case 'dev':
     envPath = 'envs/.local.env';

@@ -6,26 +6,18 @@ import {
   DeleteDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { DateColumn } from './commons/date.entity';
 
 @Entity({
-  name: 'groups',
+  name: 'group',
 })
-export class GroupsEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class GroupsEntity extends DateColumn {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
 
   @Column({ type: 'varchar' })
   name: string;
 
   @Column({ type: 'varchar' })
   description: string;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @DeleteDateColumn()
-  deleted_at: Date;
 }
