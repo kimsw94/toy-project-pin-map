@@ -27,22 +27,10 @@ export class UsersService {
     private datasource: DataSource,
   ) {}
   async signUp(dto: UserSignUpDTO) {
-    if (!dto.email)
-      throw new InternalServerErrorException('이메일을 입력해주세요.')
-    if (!dto.password)
-      throw new InternalServerErrorException(
-        '패스워드를 입력해주세요.',
-      )
-    if (!dto.phone)
-      throw new InternalServerErrorException(
-        '전화번호를 입력해주세요.',
-      )
-    if (!dto.nickname)
-      throw new InternalServerErrorException('닉네임을 입력해주세요.')
-
-    // const isExist = await this.userRepository.findOne({ where: { email } });
-    // if (isExist)
-    //   throw new InternalServerErrorException('이메일이 중복되었습니다.');
+    const email = dto.email
+    const isExist = await this.userRepository.findOne({ where: { email } });
+    if (isExist)
+      throw new InternalServerErrorException('이메일이 중복되었습니다.');
 
     const signUp = await this.usersRepository.signUp(dto)
     return signUp
@@ -52,7 +40,7 @@ export class UsersService {
     const email = dto.email
 
     const isExist = await this.userRepository.findOne({
-      where: { email },
+      where: { email }
     })
     if (!isExist)
       throw new InternalServerErrorException(
