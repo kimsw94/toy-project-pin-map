@@ -1,7 +1,8 @@
 import { EntityManager } from 'typeorm';
-import { UsersEntity } from 'src/entities/user.entity';
+import { UserEntity } from 'src/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { UsersDTO } from 'src/api/users/dtos/users.dto';
+import { UserSignUpDTO } from 'src/api/users/dtos/sign-up.dto';
 import * as bcrypt from 'bcrypt';
 
 type UserDataType = {
@@ -20,10 +21,10 @@ type OptionType = {
 export class UsersRepository {
   constructor(private readonly entityManager: EntityManager) {}
 
-  async signUp(dto: UsersDTO, manager?: EntityManager) {
+  async signUp(dto: UserSignUpDTO, manager?: EntityManager) {
     let repo = null;
     if (manager) {
-      repo = manager.getRepository(UsersEntity);
+      repo = manager.getRepository(UserEntity);
       repo = repo.createQueryBuilder();
     } else {
       repo = this.entityManager;
@@ -48,7 +49,7 @@ export class UsersRepository {
   async getHashedPassword(email: string, manager?: EntityManager) {
     let repo = null;
     if (manager) {
-      repo = manager.getRepository(UsersEntity);
+      repo = manager.getRepository(UserEntity);
       repo = repo.createQueryBuilder();
     } else {
       repo = this.entityManager;
@@ -67,7 +68,7 @@ export class UsersRepository {
   async getUserInfoById(userId: number, option: OptionType, manager?: EntityManager) {
     let repo = null;
     if (manager) {
-        repo = manager.getRepository(UsersEntity);
+        repo = manager.getRepository(UserEntity);
         repo = repo.createQueryBuilder('u')
     } else {
         repo = this.entityManager;
@@ -89,7 +90,7 @@ export class UsersRepository {
   async getUserInfo(email: string, manager?: EntityManager) {
     let repo = null;
     if (manager) {
-      repo = manager.getRepository(UsersEntity);
+      repo = manager.getRepository(UserEntity);
       repo = repo.createQueryBuilder();
     } else {
       repo = this.entityManager;
@@ -108,7 +109,7 @@ export class UsersRepository {
   async banUser(userId: number, manager?: EntityManager) {
     let repo = null;
     if (manager) {
-      repo = manager.getRepository(UsersEntity);
+      repo = manager.getRepository(UserEntity);
     } else {
       repo = this.entityManager;
     }
@@ -125,7 +126,7 @@ export class UsersRepository {
   async unbanUser(userId: number, manager?: EntityManager) {
     let repo = null;
     if (manager) {
-      repo = manager.getRepository(UsersEntity);
+      repo = manager.getRepository(UserEntity);
     } else {
       repo = this.entityManager;
     }
@@ -143,7 +144,7 @@ export class UsersRepository {
   async modifyUser(userId: number, dto: UserDataType, manager?: EntityManager) {
     let repo = null;
     if (manager) {
-      repo = manager.getRepository(UsersEntity);
+      repo = manager.getRepository(UserEntity);
     } else {
       repo = this.entityManager;
     }
@@ -167,7 +168,7 @@ export class UsersRepository {
   ) {
     let repo = null;
     if (manager) {
-      repo = manager.getRepository(UsersEntity);
+      repo = manager.getRepository(UserEntity);
     } else {
       repo = this.entityManager;
     }
@@ -190,7 +191,7 @@ export class UsersRepository {
   async resetUserPassword(userId: number, manager?: EntityManager) {
     let repo = null;
     if (manager) {
-      repo = manager.getRepository(UsersEntity);
+      repo = manager.getRepository(UserEntity);
     } else {
       repo = this.entityManager;
     }

@@ -7,6 +7,8 @@ import {
     UseGuards,
   } from '@nestjs/common';
   import { UsersDTO } from './dtos/users.dto';
+  import { UserAuthDTO } from './dtos/auth.dto';
+  import { UserSignUpDTO } from './dtos/sign-up.dto';
   import { Request, Response } from 'express';
   import { UsersService } from './users.service';
   import { JwtAuthGuard } from 'src/jwt/jwt.guard';
@@ -20,7 +22,7 @@ import {
     ) {}
   
     @Post('sign-up')
-    async signUp(@Body() dto: UsersDTO) {
+    async signUp(@Body() dto: UserSignUpDTO) {
       const signUp = await this.usersService.signUp(dto);
       return signUp;
     }
@@ -28,7 +30,7 @@ import {
     @Post('sign-in')
     @UseGuards(JwtAuthGuard)
     async signIn(
-      @Body() dto: UsersDTO,
+      @Body() dto: UserAuthDTO,
       @Req() req: Request,
       @Res({ passthrough: true }) res: Response,
     ) {

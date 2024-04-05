@@ -4,14 +4,14 @@ import { ConfigService } from '@nestjs/config';
 import { UsersController } from './users.controller';
 import { UsersRepository } from 'src/repositories/users.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersEntity } from 'src/entities/user.entity';
+import { UserEntity } from 'src/entities/user.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 @Module({
   providers: [UsersService, ConfigService, UsersRepository],
   controllers: [UsersController],
   imports: [
-    TypeOrmModule.forFeature([UsersEntity]),
+    TypeOrmModule.forFeature([UserEntity]),
     PassportModule.register({
       defaultStrategy: 'jwt',
       session: false,

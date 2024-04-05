@@ -1,12 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm'
+import { Column, OneToMany, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm'
 import { DateColumn } from './commons/date.entity'
+import { GroupEntity } from './group.entity'
+import { UserGroupStatus } from './commons/group.status.enum'
 
 @Entity({
   name: 'user',
   comment: '유저 테이블'
-}) //복수형보다는 단수형으로 하는 것이 좋다. (DB Convention 관련함)
+}) 
 
-export class UsersEntity extends DateColumn {
+export class UserEntity extends DateColumn {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
@@ -21,6 +23,13 @@ export class UsersEntity extends DateColumn {
 
   @Column({ type: 'varchar' })
   phone: string
+
+  /*
+  테이블 관계 설정
+  */
+
+  // @OneToMany(()=> UserGroupEntity, (userGroup) => userGroup.user)
+  // UserGroups: UserGroupEntity[];
 }
 
 @Entity({
@@ -32,31 +41,18 @@ export class UserGroupEntity extends DateColumn{
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ type: 'integer' })
-  users_id: number
+  /*
+  테이블 관계 설정
+  */
 
-  @Column({ type: 'integer' })
-  groups_id: number
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  user: UserEntity
 
-  @Column({ type: 'enum' })
-  status: string
-}
+  @ManyToOne(() => GroupEntity, (group) => group.id)
+  @JoinColumn({ name: 'group_id', referencedColumnName: 'id' })
+  group: GroupEntity
 
-@Entity({
-  name: 'user_group_status',
-  comment: '사용자와 그룹 신청 상태를 관리하는 중간 테이블',
-})
-
-export class UserGroupStatusEntity extends DateColumn {
-  @PrimaryGeneratedColumn('uuid')
-  id: string
-
-  @Column({ type: 'integer' })
-  users_id: number
-
-  @Column({ type: 'integer' })
-  groups_id: number
-
-  @Column({ type: 'enum' })
-  status: string
+  @Column({ type: 'enum', enum: UserGroupStatus })
+  status: UserGroupStatus
 }

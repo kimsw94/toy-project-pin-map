@@ -5,26 +5,28 @@ import {
   BadRequestException,
 } from '@nestjs/common'
 import { UsersRepository } from '../../repositories/users.repository'
-import { UsersEntity } from 'src/entities/user.entity'
+import { UserEntity } from 'src/entities/user.entity'
 import { UsersDTO } from './dtos/users.dto'
+import { UserSignUpDTO } from './dtos/sign-up.dto'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import { DataSource, Repository } from 'typeorm'
 import { ConfigService } from '@nestjs/config'
 import { InjectRepository } from '@nestjs/typeorm'
+import { UserAuthDTO } from './dtos/auth.dto'
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly usersRepository: UsersRepository,
-    @InjectRepository(UsersEntity)
-    private readonly userRepository: Repository<UsersEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
     @Inject(JwtService)
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private datasource: DataSource,
   ) {}
-  async signUp(dto: UsersDTO) {
+  async signUp(dto: UserSignUpDTO) {
     if (!dto.email)
       throw new InternalServerErrorException('이메일을 입력해주세요.')
     if (!dto.password)
@@ -46,7 +48,7 @@ export class UsersService {
     return signUp
   }
 
-  async signIn(dto: UsersDTO) {
+  async signIn(dto: UserAuthDTO) {
     const email = dto.email
 
     const isExist = await this.userRepository.findOne({
@@ -78,7 +80,7 @@ export class UsersService {
 
   async findUserByEmail(email: string) {
     try {
-      const user: UsersEntity = await this.userRepository.findOne({
+      const user: UserEntity = await this.userRepository.findOne({
         where: { email },
       })
       if (!user) throw new BadRequestException('유저가 없습니다.')

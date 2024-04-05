@@ -1,17 +1,18 @@
 import {
   Column,
   Entity,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
-  DeleteDateColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { DateColumn } from './commons/date.entity';
+import { UserGroupEntity } from './user.entity';
 
 @Entity({
   name: 'group',
 })
-export class GroupsEntity extends DateColumn {
+export class GroupEntity extends DateColumn {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
@@ -20,4 +21,11 @@ export class GroupsEntity extends DateColumn {
 
   @Column({ type: 'varchar' })
   description: string;
+
+  /*
+  테이블 관계 설정
+  */
+
+  // @OneToMany(()=> UserGroupEntity, (UserGroup) => UserGroup.group)
+  // UserGroups: UserGroupEntity[];
 }
