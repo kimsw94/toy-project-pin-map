@@ -46,6 +46,7 @@ export class UsersController {
     const token: string = await this.usersService.signIn(dto)
     return new AuthResponseDTO(token)
   }
+}
 
 
   // @ApiOperation({ summary: '회원 탈퇴 엔드포인트'})
@@ -60,4 +61,3 @@ export class UsersController {
   //   const withdraw = await this.usersService.withdraw(userId)
   //   return { success: true, withdraw }
   // }
-}
