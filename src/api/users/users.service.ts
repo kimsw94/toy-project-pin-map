@@ -25,16 +25,13 @@ export class UsersService {
     private datasource: DataSource,
   ) {}
   async signUp(dto: UserAuthDTO): Promise<string> {
-    const email = dto.email
     const isExist = await this.usersRepository.getUserIdByEmail(dto)
     if (isExist)
       throw new InternalServerErrorException(
         '이메일이 중복되었습니다.',
       )
     await this.usersRepository.signUp(dto)
-
     const user = await this.usersRepository.getUserIdByEmail(dto)
-
     const jwt = await this.jwtService.signAsync({
       id: user.id,
     })
