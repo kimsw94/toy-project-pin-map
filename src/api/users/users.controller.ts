@@ -2,12 +2,9 @@ import {
   Controller,
   Post,
   Body,
-  Req,
-  Res,
   UseGuards,
 } from '@nestjs/common'
 import { AuthResponseDTO, UserAuthDTO } from './dtos/auth.dto'
-import { Request, Response } from 'express'
 import { UsersService } from './users.service'
 import { JwtAuthGuard } from 'src/jwt/jwt.guard'
 import { JwtService } from '@nestjs/jwt'
