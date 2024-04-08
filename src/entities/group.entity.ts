@@ -6,7 +6,7 @@ import {
   JoinColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { DateColumn } from './commons/date.entity';
+import { DateColumn } from './common.entity';
 import { UserGroupEntity } from './user.entity';
 
 @Entity({

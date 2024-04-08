@@ -6,13 +6,15 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common'
-import { UsersDTO } from './dtos/users.dto'
 import { AuthResponseDTO, UserAuthDTO } from './dtos/auth.dto'
 import { Request, Response } from 'express'
 import { UsersService } from './users.service'
 import { JwtAuthGuard } from 'src/jwt/jwt.guard'
 import { JwtService } from '@nestjs/jwt'
+import { ApiResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { UserSignUpDTO } from './dtos/auth.dto'
 
+@ApiTags('사용자 회원가입 및 로그인')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -20,13 +22,24 @@ export class UsersController {
     private readonly jwtService: JwtService,
   ) {}
 
+  @ApiOperation({ summary: '회원가입 엔드포인트'})
+  @ApiResponse({
+    status: 201,
+    description: '회원가입 성공',
+  })
   @Post('sign-up')
   @UseGuards(JwtAuthGuard)
-  async signUp(@Body() dto: UserAuthDTO): Promise<AuthResponseDTO> {
+  async signUp(@Body() dto: UserSignUpDTO): Promise<AuthResponseDTO> {
     const token: string = await this.usersService.signUp(dto)
     return new AuthResponseDTO(token)
   }
 
+  @ApiOperation({ summary: '로그인 엔드포인트'})
+  @ApiResponse({
+    status: 201,
+    description: '로그인 성공',
+  })
+  
   @Post('sign-in')
   @UseGuards(JwtAuthGuard)
   async signIn(@Body() dto: UserAuthDTO): Promise<AuthResponseDTO> {
@@ -34,6 +47,8 @@ export class UsersController {
     return new AuthResponseDTO(token)
   }
 
+
+  @ApiOperation({ summary: '회원탈퇴 엔드포인트'})
   @Post('withdraw')
   @UseGuards(JwtAuthGuard)
   async userWithdraw(

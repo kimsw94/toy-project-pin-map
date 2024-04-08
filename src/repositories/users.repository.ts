@@ -2,6 +2,7 @@ import { EntityManager } from 'typeorm'
 import { UserEntity } from 'src/entities/user.entity'
 import { Injectable } from '@nestjs/common'
 import { UsersDTO } from 'src/api/users/dtos/users.dto'
+import { UserSignUpDTO } from 'src/api/users/dtos/auth.dto'
 import { UserAuthDTO } from 'src/api/users/dtos/auth.dto'
 import * as bcrypt from 'bcrypt'
 
@@ -21,7 +22,7 @@ type OptionType = {
 export class UsersRepository {
   constructor(private readonly entityManager: EntityManager) {}
 
-  async signUp(dto: UserAuthDTO, manager?: EntityManager) {
+  async signUp(dto: UserSignUpDTO, manager?: EntityManager) {
     let repo = null
     if (manager) {
       repo = manager.getRepository(UserEntity)

@@ -12,6 +12,7 @@ import { DataSource, Repository } from 'typeorm'
 import { ConfigService } from '@nestjs/config'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserAuthDTO } from './dtos/auth.dto'
+import { UserSignUpDTO } from './dtos/auth.dto'
 
 @Injectable()
 export class UsersService {
@@ -21,10 +22,9 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
     @Inject(JwtService)
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
     private datasource: DataSource,
   ) {}
-  async signUp(dto: UserAuthDTO): Promise<string> {
+  async signUp(dto: UserSignUpDTO): Promise<string> {
     const isExist = await this.usersRepository.getUserIdByEmail(dto)
     if (isExist)
       throw new InternalServerErrorException(

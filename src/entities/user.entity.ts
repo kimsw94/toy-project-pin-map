@@ -1,5 +1,5 @@
 import { Column, OneToMany, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm'
-import { DateColumn } from './commons/date.entity'
+import { DateColumn } from './common.entity'
 import { GroupEntity } from './group.entity'
 import { UserGroupStatus } from 'src/enums/group.status.enum'
 
