@@ -48,17 +48,16 @@ export class UsersController {
   }
 
 
-  @ApiOperation({ summary: '회원 탈퇴 엔드포인트'})
-  @Post('withdraw')
-  @UseGuards(JwtAuthGuard)
-  async userWithdraw(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const jwtCookie = req.cookies[process.env.JWT_KEY]
-    const userId = this.jwtService.decode(jwtCookie)['id']
-    const withdraw = await this.usersService.withdraw(userId)
-
-    return { success: true, withdraw }
-  }
+  // @ApiOperation({ summary: '회원 탈퇴 엔드포인트'})
+  // @Post('withdraw')
+  // @UseGuards(JwtAuthGuard)
+  // async userWithdraw(
+  //   @Req() req: Request,
+  //   @Res({ passthrough: true }) res: Response,
+  // ) {
+  //   const jwtCookie = req.cookies[process.env.JWT_KEY]
+  //   const userId = this.jwtService.decode(jwtCookie)['id']
+  //   const withdraw = await this.usersService.withdraw(userId)
+  //   return { success: true, withdraw }
+  // }
 }
