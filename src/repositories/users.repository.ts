@@ -47,7 +47,7 @@ export class UsersRepository {
   }
 
   async getUserIdByEmail(
-    dto: UserAuthDTO,
+    email: string,
     manager?: EntityManager,
   ) {
     let repo = null
@@ -58,7 +58,6 @@ export class UsersRepository {
       repo = this.entityManager
       repo = repo.createQueryBuilder()
     }
-    const email = dto.email
     const result = await repo.findOne({
       where: { email },
     })

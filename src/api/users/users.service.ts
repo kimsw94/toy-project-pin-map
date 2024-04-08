@@ -25,14 +25,15 @@ export class UsersService {
     private datasource: DataSource,
   ) {}
   async signUp(dto: UserAuthDTO): Promise<string> {
-    const isExist = await this.usersRepository.getUserIdByEmail(dto)
+    const email = dto.email
+    const isExist = await this.usersRepository.getUserIdByEmail(email)
     if (isExist)
       throw new InternalServerErrorException(
         '이메일이 중복되었습니다.',
       )
     await this.usersRepository.signUp(dto)
 
-    const user = await this.usersRepository.getUserIdByEmail(dto)
+    const user = await this.usersRepository.getUserIdByEmail(email)
 
     const jwt = await this.jwtService.signAsync({
       id: user.id,
@@ -42,8 +43,10 @@ export class UsersService {
   }
 
   async signIn(dto: UserAuthDTO) {
+
     const email = dto.email
-    const isExist = await this.usersRepository.getUserIdByEmail(dto)
+    
+    const isExist = await this.usersRepository.getUserIdByEmail(email)
     if (!isExist)
       throw new InternalServerErrorException(
         '이메일이 존재하지 않습니다.',
@@ -66,9 +69,10 @@ export class UsersService {
     return jwt
   }
 
-  async findUserByEmail(dto: UserAuthDTO) {
+  async findUserByEmail(email: string) {
     try {
-      const isExist = await this.usersRepository.getUserIdByEmail(dto)
+
+      const isExist = await this.usersRepository.getUserIdByEmail(email)
       if (!isExist) throw new BadRequestException('유저가 없습니다.')
       return isExist
     } catch (error) {
