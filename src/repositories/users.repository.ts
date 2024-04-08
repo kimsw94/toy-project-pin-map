@@ -1,164 +1,212 @@
-import { EntityManager } from 'typeorm';
-import { UserEntity } from 'src/entities/user.entity';
-import { Injectable } from '@nestjs/common';
-import { UsersDTO } from 'src/api/users/dtos/users.dto';
-import { UserSignUpDTO } from 'src/api/users/dtos/sign-up.dto';
-import * as bcrypt from 'bcrypt';
+import { EntityManager } from 'typeorm'
+import { UserEntity } from 'src/entities/user.entity'
+import { Injectable } from '@nestjs/common'
+import { UsersDTO } from 'src/api/users/dtos/users.dto'
+import { UserAuthDTO } from 'src/api/users/dtos/auth.dto'
+import * as bcrypt from 'bcrypt'
 
 type UserDataType = {
-  id?: number;
-  email?: string;
-  password?: string;
-  nickname?: string;
-  phone?: string;
-};
+  id?: number
+  email?: string
+  password?: string
+  nickname?: string
+  phone?: string
+}
 
 type OptionType = {
-  with_deleted?: boolean;
+  with_deleted?: boolean
 }
 
 @Injectable()
 export class UsersRepository {
   constructor(private readonly entityManager: EntityManager) {}
 
-  async signUp(dto: UserSignUpDTO, manager?: EntityManager) {
-    let repo = null;
+  async signUp(dto: UserAuthDTO, manager?: EntityManager) {
+    let repo = null
     if (manager) {
-      repo = manager.getRepository(UserEntity);
-      repo = repo.createQueryBuilder();
+      repo = manager.getRepository(UserEntity)
+      repo = repo.createQueryBuilder()
     } else {
-      repo = this.entityManager;
-      repo = repo.createQueryBuilder();
+      repo = this.entityManager
+      repo = repo.createQueryBuilder()
     }
 
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    const hashedPassword = await bcrypt.hash(dto.password, 10)
     const result = await repo
       .insert()
-      .into('users')
+      .into('user')
       .values({
         email: dto.email,
         password: hashedPassword,
         nickname: dto.nickname,
         phone: dto.phone,
       })
-      .execute();
+      .execute()
 
-    return { result };
+    return { result }
+  }
+
+  async getUserIdByEmail(
+    dto: UserAuthDTO,
+    manager?: EntityManager,
+  ) {
+    let repo = null
+    if (manager) {
+      repo = manager.getRepository(UserEntity)
+      repo = repo.createQueryBuilder()
+    } else {
+      repo = this.entityManager
+      repo = repo.createQueryBuilder()
+    }
+    const email = dto.email
+    const result = await repo.findOne({
+      where: { email },
+    })
+
+    return result.id
+  }
+
+  async getUserInfoByEmail(
+    dto: UserAuthDTO,
+    manager?: EntityManager,
+  ) {
+    let repo = null
+    if (manager) {
+      repo = manager.getRepository(UserEntity)
+      repo = repo.createQueryBuilder()
+    } else {
+      repo = this.entityManager
+      repo = repo.createQueryBuilder()
+    }
+    const email = dto.email
+    const result = await repo.findOne({
+      where: { email },
+    })
+
+    return result
   }
 
   async getHashedPassword(email: string, manager?: EntityManager) {
-    let repo = null;
+    let repo = null
     if (manager) {
-      repo = manager.getRepository(UserEntity);
-      repo = repo.createQueryBuilder();
+      repo = manager.getRepository(UserEntity)
+      repo = repo.createQueryBuilder()
     } else {
-      repo = this.entityManager;
-      repo = repo.createQueryBuilder();
+      repo = this.entityManager
+      repo = repo.createQueryBuilder()
     }
 
     const result = await repo
-      .select('users.password')
-      .from('users')
-      .where('users.email = :email', { email })
-      .getOne();
+      .select('user.password')
+      .from('user')
+      .where('user.email = :email', { email })
+      .getOne()
 
-    return result.password;
+    return result.password
   }
 
-  async getUserInfoById(userId: number, option: OptionType, manager?: EntityManager) {
-    let repo = null;
+  async getUserInfoById(
+    userId: number,
+    option: OptionType,
+    manager?: EntityManager,
+  ) {
+    let repo = null
     if (manager) {
-        repo = manager.getRepository(UserEntity);
-        repo = repo.createQueryBuilder('u')
+      repo = manager.getRepository(UserEntity)
+      repo = repo.createQueryBuilder('u')
     } else {
-        repo = this.entityManager;
-        repo = repo.createQueryBuilder('users', 'u')
+      repo = this.entityManager
+      repo = repo.createQueryBuilder('user', 'u')
     }
 
     let userRepo = repo
     if (option?.with_deleted) {
-        userRepo = userRepo.withDeleted()
-      }
-    
+      userRepo = userRepo.withDeleted()
+    }
+
     const userInfo = await userRepo
-        .where('u.id = :userId', { userId })
-        .getOne();
+      .where('u.id = :userId', { userId })
+      .getOne()
 
     return userInfo
-}
+  }
 
   async getUserInfo(email: string, manager?: EntityManager) {
-    let repo = null;
+    let repo = null
     if (manager) {
-      repo = manager.getRepository(UserEntity);
-      repo = repo.createQueryBuilder();
+      repo = manager.getRepository(UserEntity)
+      repo = repo.createQueryBuilder()
     } else {
-      repo = this.entityManager;
-      repo = repo.createQueryBuilder();
+      repo = this.entityManager
+      repo = repo.createQueryBuilder()
     }
 
     const result = await repo
       .select()
-      .from('users')
-      .where('users.email = :email', { email }) // 플레이스홀더 사용
-      .getOne();
+      .from('user')
+      .where('user.email = :email', { email }) // 플레이스홀더 사용
+      .getOne()
 
-    return result;
+    return result
   }
 
   async banUser(userId: number, manager?: EntityManager) {
-    let repo = null;
+    let repo = null
     if (manager) {
-      repo = manager.getRepository(UserEntity);
+      repo = manager.getRepository(UserEntity)
     } else {
-      repo = this.entityManager;
+      repo = this.entityManager
     }
 
     const updateResult = await repo
       .createQueryBuilder()
       .softDelete()
-      .from('users')
+      .from('user')
       .where('id = :userId', { userId })
-      .execute();
-    return updateResult;
+      .execute()
+    return updateResult
   }
 
   async unbanUser(userId: number, manager?: EntityManager) {
-    let repo = null;
+    let repo = null
     if (manager) {
-      repo = manager.getRepository(UserEntity);
+      repo = manager.getRepository(UserEntity)
     } else {
-      repo = this.entityManager;
+      repo = this.entityManager
     }
     const updateResult = await repo
       .createQueryBuilder()
-      .update('users')
+      .update('user')
       .set({
         deleted_at: null,
       })
       .where('id = :userId', { userId })
-      .execute();
-    return updateResult;
+      .execute()
+    return updateResult
   }
 
-  async modifyUser(userId: number, dto: UserDataType, manager?: EntityManager) {
-    let repo = null;
+  async modifyUser(
+    userId: number,
+    dto: UserDataType,
+    manager?: EntityManager,
+  ) {
+    let repo = null
     if (manager) {
-      repo = manager.getRepository(UserEntity);
+      repo = manager.getRepository(UserEntity)
     } else {
-      repo = this.entityManager;
+      repo = this.entityManager
     }
     const updateResult = await repo
       .createQueryBuilder()
-      .update('users')
+      .update('user')
       .set({
         nickname: dto.nickname,
         email: dto.email,
         phone: dto.phone,
       })
       .where('id = :userId', { userId })
-      .execute();
-    return updateResult;
+      .execute()
+    return updateResult
   }
 
   async modifyUserWithPassword(
@@ -166,17 +214,17 @@ export class UsersRepository {
     dto: UserDataType,
     manager?: EntityManager,
   ) {
-    let repo = null;
+    let repo = null
     if (manager) {
-      repo = manager.getRepository(UserEntity);
+      repo = manager.getRepository(UserEntity)
     } else {
-      repo = this.entityManager;
+      repo = this.entityManager
     }
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    const hashedPassword = await bcrypt.hash(dto.password, 10)
 
     const updateResult = await repo
       .createQueryBuilder()
-      .update('users')
+      .update('user')
       .set({
         nickname: dto.nickname,
         email: dto.email,
@@ -184,27 +232,27 @@ export class UsersRepository {
         password: hashedPassword,
       })
       .where('id = :userId', { userId })
-      .execute();
-    return updateResult;
+      .execute()
+    return updateResult
   }
 
   async resetUserPassword(userId: number, manager?: EntityManager) {
-    let repo = null;
+    let repo = null
     if (manager) {
-      repo = manager.getRepository(UserEntity);
+      repo = manager.getRepository(UserEntity)
     } else {
-      repo = this.entityManager;
+      repo = this.entityManager
     }
-    const password = '12345678';
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const password = '12345678'
+    const hashedPassword = await bcrypt.hash(password, 10)
     const updateResult = await repo
       .createQueryBuilder()
-      .update('users')
+      .update('user')
       .set({
         password: hashedPassword,
       })
       .where('id = :userId', { userId })
-      .execute();
-    return updateResult;
+      .execute()
+    return updateResult
   }
 }

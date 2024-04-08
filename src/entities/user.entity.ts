@@ -1,7 +1,7 @@
 import { Column, OneToMany, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm'
 import { DateColumn } from './commons/date.entity'
 import { GroupEntity } from './group.entity'
-import { UserGroupStatus } from './commons/group.status.enum'
+import { UserGroupStatus } from 'src/enums/group.status.enum'
 
 @Entity({
   name: 'user',

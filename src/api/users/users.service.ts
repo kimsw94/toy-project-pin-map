@@ -6,8 +6,6 @@ import {
 } from '@nestjs/common'
 import { UsersRepository } from '../../repositories/users.repository'
 import { UserEntity } from 'src/entities/user.entity'
-import { UsersDTO } from './dtos/users.dto'
-import { UserSignUpDTO } from './dtos/sign-up.dto'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import { DataSource, Repository } from 'typeorm'
@@ -26,22 +24,25 @@ export class UsersService {
     private readonly configService: ConfigService,
     private datasource: DataSource,
   ) {}
-  async signUp(dto: UserSignUpDTO) {
-    const email = dto.email
-    const isExist = await this.userRepository.findOne({ where: { email } });
-    if (isExist)
-      throw new InternalServerErrorException('이메일이 중복되었습니다.');
+  async signUp(dto: UserAuthDTO): Promise<string> {
 
-    const signUp = await this.usersRepository.signUp(dto)
-    return signUp
+    const isExist = await this.usersRepository.getUserIdByEmail(dto);
+    if (isExist) throw new InternalServerErrorException('이메일이 중복되었습니다.');
+    await this.usersRepository.signUp(dto)
+
+    const user = await this.usersRepository.getUserIdByEmail(dto)
+    
+    const jwt = await this.jwtService.signAsync({
+      id: user.id,
+    })
+
+    return jwt
   }
 
   async signIn(dto: UserAuthDTO) {
     const email = dto.email
 
-    const isExist = await this.userRepository.findOne({
-      where: { email }
-    })
+    const isExist = await this.usersRepository.getUserIdByEmail(dto);
     if (!isExist)
       throw new InternalServerErrorException(
         '이메일이 존재하지 않습니다.',
@@ -55,28 +56,26 @@ export class UsersService {
     const isMatched = await bcrypt.compare(dto.password, isPassword)
     if (!isMatched)
       throw new InternalServerErrorException('패스워드가 틀렸습니다.')
-    const user = await this.userRepository.findOne({
-      where: { email },
-    })
-
-    const jwt = await this.jwtService.signAsync({
-      id: user.id,
-    })
+      const user = await this.usersRepository.getUserInfoByEmail(dto)
+    
+      const jwt = await this.jwtService.signAsync({
+        id: user.id,
+      })
 
     return { user, jwt }
   }
 
-  async findUserByEmail(email: string) {
+  
+  async findUserByEmail(dto: UserAuthDTO) {
     try {
-      const user: UserEntity = await this.userRepository.findOne({
-        where: { email },
-      })
-      if (!user) throw new BadRequestException('유저가 없습니다.')
-      return user.id
+      const isExist = await this.usersRepository.getUserIdByEmail(dto);
+      if (!isExist) throw new BadRequestException('유저가 없습니다.')
+      return isExist
     } catch (error) {
       throw new BadRequestException('잘못된 요청입니다')
     }
   }
+
 
   async withdraw(userId: number) {
     const userWithdraw = await this.usersRepository.banUser(userId)

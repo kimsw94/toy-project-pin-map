@@ -3,7 +3,12 @@ import {
   IsNotEmpty,
   IsStrongPassword,
   MinLength,
+  IsPhoneNumber,
+  isString,
+  IsString,
+  IsJWT,
 } from 'class-validator'
+import { DateColumn } from 'src/entities/commons/date.entity'
 
 export class UserAuthDTO {
   @IsNotEmpty()
@@ -25,4 +30,21 @@ export class UserAuthDTO {
     },
   )
   password: string
+
+  @IsNotEmpty()
+  @IsPhoneNumber()
+  phone: string
+
+  @IsNotEmpty()
+  nickname: string
+}
+
+export class AuthResponseDto {
+  @IsString()
+  @IsJWT()
+  token: string
+
+  constructor(token: string) {
+    this.token = token
+  }
 }

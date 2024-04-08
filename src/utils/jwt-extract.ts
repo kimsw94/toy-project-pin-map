@@ -5,8 +5,8 @@ export const JwtExtractorFromHeaders: JwtFromRequestFunction = (
   request: Request,
 ): string | null => {
   try {
-    const jwt = request.cookies['jwt']
-    // const jwt = request?.headers?.authorization?.replace('JWT ', '')
+    // const jwt = request.cookies['jwt']
+    const jwt = request?.headers?.authorization?.replace('JWT ', '')
     return jwt
   } catch (error) {
     return null
