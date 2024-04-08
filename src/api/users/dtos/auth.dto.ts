@@ -39,7 +39,7 @@ export class UserAuthDTO {
   nickname: string
 }
 
-export class AuthResponseDto {
+export class AuthResponseDTO {
   @IsString()
   @IsJWT()
   token: string

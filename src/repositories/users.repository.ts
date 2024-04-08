@@ -86,7 +86,7 @@ export class UsersRepository {
     return result
   }
 
-  async getHashedPassword(email: string, manager?: EntityManager) {
+  async getHashedPassword(dto: UserAuthDTO, manager?: EntityManager) {
     let repo = null
     if (manager) {
       repo = manager.getRepository(UserEntity)
@@ -95,6 +95,8 @@ export class UsersRepository {
       repo = this.entityManager
       repo = repo.createQueryBuilder()
     }
+    
+    const email = dto.email
 
     const result = await repo
       .select('user.password')
