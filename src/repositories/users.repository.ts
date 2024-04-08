@@ -62,11 +62,11 @@ export class UsersRepository {
 
     let userRepo = repo
 
-    const userId = await userRepo
+    const result = await userRepo
       .where('u.email = :email', { email })
       .getOne()
 
-    return userId
+    return result
   }
 
 

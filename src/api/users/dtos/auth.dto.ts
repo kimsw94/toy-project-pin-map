@@ -2,14 +2,12 @@ import {
   IsEmail,
   IsNotEmpty,
   IsStrongPassword,
-  MinLength,
   IsPhoneNumber,
-  isString,
   IsString,
   IsJWT,
 } from 'class-validator'
 import { DateColumn } from 'src/entities/common.entity'
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, PickType } from '@nestjs/swagger';
 
 export class UserAuthDTO {
   @ApiProperty({

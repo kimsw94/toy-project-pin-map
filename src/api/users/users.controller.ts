@@ -48,7 +48,7 @@ export class UsersController {
   }
 
 
-  @ApiOperation({ summary: '회원탈퇴 엔드포인트'})
+  @ApiOperation({ summary: '회원 탈퇴 엔드포인트'})
   @Post('withdraw')
   @UseGuards(JwtAuthGuard)
   async userWithdraw(
