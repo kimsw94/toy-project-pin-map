@@ -46,44 +46,28 @@ export class UsersRepository {
     return { result }
   }
 
-  async getUserIdByEmail(
-    email: string,
-    manager?: EntityManager,
-  ) {
-    let repo = null
-    if (manager) {
-      repo = manager.getRepository(UserEntity)
-      repo = repo.createQueryBuilder()
-    } else {
-      repo = this.entityManager
-      repo = repo.createQueryBuilder()
-    }
-    const result = await repo.findOne({
-      where: { email },
-    })
-
-    return result.id
-  }
-
-  async getUserInfoByEmail(
-    dto: UserAuthDTO,
-    manager?: EntityManager,
-  ) {
-    let repo = null
-    if (manager) {
-      repo = manager.getRepository(UserEntity)
-      repo = repo.createQueryBuilder()
-    } else {
-      repo = this.entityManager
-      repo = repo.createQueryBuilder()
-    }
+  async getUserIdByEmail(dto: UserAuthDTO, manager?: EntityManager) {
+    
     const email = dto.email
-    const result = await repo.findOne({
-      where: { email },
-    })
+    
+    let repo = null
+    if (manager) {
+      repo = manager.getRepository(UserEntity)
+      repo = repo.createQueryBuilder('u')
+    } else {
+      repo = this.entityManager
+      repo = repo.createQueryBuilder('user', 'u')
+    }
 
-    return result
+    let userRepo = repo
+
+    const userId = await userRepo
+      .where('u.email = :email', { email })
+      .getOne()
+
+    return userId
   }
+
 
   async getHashedPassword(dto: UserAuthDTO, manager?: EntityManager) {
     let repo = null
@@ -94,7 +78,7 @@ export class UsersRepository {
       repo = this.entityManager
       repo = repo.createQueryBuilder()
     }
-    
+
     const email = dto.email
 
     const result = await repo

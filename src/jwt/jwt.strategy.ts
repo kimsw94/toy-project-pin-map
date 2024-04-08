@@ -5,6 +5,7 @@ import { PassportStrategy } from '@nestjs/passport'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import * as dotenv from 'dotenv'
+import { UserAuthDTO } from 'src/api/users/dtos/auth.dto'
 
 dotenv.config()
 
@@ -23,9 +24,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       
   }
 
-  async validate(payload: JwtPayload) {
+  async validate(dto: UserAuthDTO) {
     try {
-      const user = await this.usersService.findUserByEmail(payload.email)
+      const user = await this.usersService.findUserByEmail(dto)
       if (user) {
         return user
       } else {
