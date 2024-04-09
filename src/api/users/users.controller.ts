@@ -16,7 +16,6 @@ import { UserSignUpDTO } from './dtos/auth.dto'
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
   ) {}
 
   @ApiOperation({ summary: '회원가입 엔드포인트'})
@@ -25,7 +24,6 @@ export class UsersController {
     description: '회원가입 성공',
   })
   @Post('sign-up')
-  @UseGuards(JwtAuthGuard)
   async signUp(@Body() dto: UserSignUpDTO): Promise<AuthResponseDTO> {
     const token: string = await this.usersService.signUp(dto)
     return new AuthResponseDTO(token)
@@ -38,23 +36,8 @@ export class UsersController {
   })
   
   @Post('sign-in')
-  @UseGuards(JwtAuthGuard)
   async signIn(@Body() dto: UserAuthDTO): Promise<AuthResponseDTO> {
     const token: string = await this.usersService.signIn(dto)
     return new AuthResponseDTO(token)
   }
 }
-
-
-  // @ApiOperation({ summary: '회원 탈퇴 엔드포인트'})
-  // @Post('withdraw')
-  // @UseGuards(JwtAuthGuard)
-  // async userWithdraw(
-  //   @Req() req: Request,
-  //   @Res({ passthrough: true }) res: Response,
-  // ) {
-  //   const jwtCookie = req.cookies[process.env.JWT_KEY]
-  //   const userId = this.jwtService.decode(jwtCookie)['id']
-  //   const withdraw = await this.usersService.withdraw(userId)
-  //   return { success: true, withdraw }
-  // }
