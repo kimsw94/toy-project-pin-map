@@ -2,8 +2,7 @@ import { EntityManager } from 'typeorm'
 import { UserEntity } from 'src/entities/user.entity'
 import { Injectable } from '@nestjs/common'
 import { UsersDTO } from 'src/api/users/dtos/users.dto'
-import { UserSignUpDTO } from 'src/api/users/dtos/auth.dto'
-import { UserAuthDTO } from 'src/api/users/dtos/auth.dto'
+import { AuthDTO } from 'src/api/users/dtos/auth.dto'
 import * as bcrypt from 'bcrypt'
 
 type UserDataType = {
@@ -22,7 +21,7 @@ type OptionType = {
 export class UsersRepository {
   constructor(private readonly entityManager: EntityManager) {}
 
-  async signUp(dto: UserSignUpDTO, manager?: EntityManager) {
+  async signUp(dto: AuthDTO.signUp, manager?: EntityManager) {
     let repo = null
     if (manager) {
       repo = manager.getRepository(UserEntity)
@@ -47,10 +46,8 @@ export class UsersRepository {
     return { result }
   }
 
-  async getUserIdByEmail(dto: UserAuthDTO, manager?: EntityManager) {
-    
-    const email = dto.email
-    
+  async getUserIdByEmail(email: string, manager?: EntityManager) {
+  
     let repo = null
     if (manager) {
       repo = manager.getRepository(UserEntity)
@@ -70,7 +67,7 @@ export class UsersRepository {
   }
 
 
-  async getHashedPassword(dto: UserAuthDTO, manager?: EntityManager) {
+  async getHashedPassword(email: string, manager?: EntityManager) {
     let repo = null
     if (manager) {
       repo = manager.getRepository(UserEntity)
@@ -79,8 +76,6 @@ export class UsersRepository {
       repo = this.entityManager
       repo = repo.createQueryBuilder()
     }
-
-    const email = dto.email
 
     const result = await repo
       .select('user.password')
