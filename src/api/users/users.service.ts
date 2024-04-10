@@ -17,11 +17,8 @@ import { AuthDTO } from './dtos/auth.dto'
 export class UsersService {
   constructor(
     private readonly usersRepository: UsersRepository,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
     @Inject(JwtService)
     private readonly jwtService: JwtService,
-    private datasource: DataSource,
   ) {}
   async signUp(dto: AuthDTO.signUp): Promise<string> {
     const isExist = await this.usersRepository.getUserIdByEmail(
