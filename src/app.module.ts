@@ -26,7 +26,6 @@ switch (process.env.APP_ENV) {
 }
 
 dotenv.config({ path: path.resolve(envPath) })
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({

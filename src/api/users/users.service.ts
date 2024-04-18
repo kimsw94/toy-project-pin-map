@@ -5,12 +5,8 @@ import {
   BadRequestException,
 } from '@nestjs/common'
 import { UsersRepository } from '../../repositories/users.repository'
-import { UserEntity } from 'src/entities/user.entity'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { DataSource, Repository } from 'typeorm'
-import { ConfigService } from '@nestjs/config'
-import { InjectRepository } from '@nestjs/typeorm'
 import { AuthDTO } from './dtos/auth.dto'
 
 @Injectable()
