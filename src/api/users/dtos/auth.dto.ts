@@ -76,11 +76,10 @@ export namespace AuthDTO {
     nickname: string
 
     @ApiProperty({
-      example: '+821012341234',
+      example: '01012341234',
       description: '휴대폰 번호',
     })
     @IsNotEmpty()
-    @IsPhoneNumber()
     phone: string
   }
 

@@ -43,7 +43,7 @@ export class UsersRepository {
       })
       .execute()
 
-    return { result }
+    return result
   }
 
   async getUserIdByEmail(email: string, manager?: EntityManager) {

@@ -7,7 +7,9 @@ import * as path from 'path'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { GroupEntity } from './entities/group.entity'
-import { JwtModule } from '@nestjs/jwt'
+import { MiddlewareConsumer, NestModule } from '@nestjs/common'
+import { LoggerMiddleware } from './middlewares/logger.middleware'
+import { ConfigModule } from '@nestjs/config'
 
 let envPath: string
 
@@ -25,6 +27,8 @@ switch (process.env.APP_ENV) {
     envPath = 'envs/.local.env'
 }
 
+console.log(process.env.JWT_KEY)
+
 dotenv.config({ path: path.resolve(envPath) })
 @Module({
   imports: [
@@ -41,9 +45,14 @@ dotenv.config({ path: path.resolve(envPath) })
       migrations: [__dirname + '/**/migrations/*.ts}'], // 마이그레이션을 수행할 파일이 관리되는 경로 설정
       migrationsTableName: 'migrations', // 마이그레이션 이력이 기록되는 테이블 이름 설정
     }),
+    ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(LoggerMiddleware).forRoutes('*')
+  }
+}
