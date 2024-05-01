@@ -3,9 +3,9 @@ import { UsersService } from '../api/users/users.service'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { JwtExtractorFromHeaders } from 'src/common/utils/jwt-extract'
 import { ConfigService } from '@nestjs/config'
 import * as dotenv from 'dotenv'
+import { AuthDTO } from 'src/api/users/dtos/auth.dto'
 
 dotenv.config()
 
@@ -24,9 +24,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       
   }
 
-  async validate(payload: JwtPayload) {
+  async validate(dto: AuthDTO.signIn) {
     try {
-      const user = await this.usersService.findUserByEmail(payload.email)
+      const user = await this.usersService.findUserByEmail(dto.email)
       if (user) {
         return user
       } else {
