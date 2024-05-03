@@ -7,13 +7,14 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserEntity } from 'src/entities/user.entity'
 import { PassportModule } from '@nestjs/passport'
 import { JwtModule } from '@nestjs/jwt'
+import { JwtService } from '@nestjs/jwt'
 import { JwtStrategy } from 'src/jwt/jwt.strategy'
 
 @Module({
   providers: [
     UsersService,
     UsersRepository,
-    JwtStrategy // 콤마 제거
+    JwtStrategy, // 콤마 제거
   ],
   controllers: [UsersController],
   imports: [
@@ -26,10 +27,9 @@ import { JwtStrategy } from 'src/jwt/jwt.strategy'
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_KEY'),
-        signOptions: { expiresIn: '15s' },
+        signOptions: { expiresIn: '24h' },
       }),
     }),
   ],
 })
-
 export class UsersModule {}

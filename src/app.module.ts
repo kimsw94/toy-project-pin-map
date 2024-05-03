@@ -10,6 +10,7 @@ import { GroupEntity } from './entities/group.entity'
 import { MiddlewareConsumer, NestModule } from '@nestjs/common'
 import { LoggerMiddleware } from './middlewares/logger.middleware'
 import { ConfigModule } from '@nestjs/config'
+import { JwtModule } from '@nestjs/jwt'
 
 let envPath: string
 
@@ -26,8 +27,6 @@ switch (process.env.APP_ENV) {
   default:
     envPath = 'envs/.local.env'
 }
-
-console.log(process.env.JWT_KEY)
 
 dotenv.config({ path: path.resolve(envPath) })
 @Module({

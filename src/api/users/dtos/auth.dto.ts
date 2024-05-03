@@ -83,6 +83,10 @@ export namespace AuthDTO {
     phone: string
   }
 
+  export class withdraw{
+
+  }
+
   export class response {
     @IsString()
     @IsJWT()

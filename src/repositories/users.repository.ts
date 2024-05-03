@@ -47,7 +47,6 @@ export class UsersRepository {
   }
 
   async getUserIdByEmail(email: string, manager?: EntityManager) {
-  
     let repo = null
     if (manager) {
       repo = manager.getRepository(UserEntity)
@@ -65,7 +64,6 @@ export class UsersRepository {
 
     return result
   }
-
 
   async getHashedPassword(email: string, manager?: EntityManager) {
     let repo = null
@@ -112,26 +110,37 @@ export class UsersRepository {
     return userInfo
   }
 
-  async getUserInfo(email: string, manager?: EntityManager) {
-    let repo = null
-    if (manager) {
-      repo = manager.getRepository(UserEntity)
-      repo = repo.createQueryBuilder()
-    } else {
-      repo = this.entityManager
-      repo = repo.createQueryBuilder()
-    }
+  async getUserInfo(userId: string): Promise<UserEntity> {
+    userId = '6d6ee937-7231-4a64-88ac-b6ccf3c49bd2'
+    const runner = this.entityManager.createQueryBuilder()
 
-    const result = await repo
-      .select()
-      .from('user')
-      .where('user.email = :email', { email }) // 플레이스홀더 사용
+    const result = await runner
+      .select('user')
+      .from(UserEntity, 'user')
+      .where(`user.id = '${userId}'`)
       .getOne()
 
     return result
+
+    // let repo = null
+    // if (manager) {
+    //   repo = manager.getRepository(UserEntity)
+    //   repo = repo.createQueryBuilder()
+    // } else {
+    //   repo = this.entityManager
+    //   repo = repo.createQueryBuilder()
+    // }
+
+    // const result = await repo
+    //   .select()
+    //   .from('user')
+    //   .where('user.id = :id', { userId }) // 플레이스홀더 사용
+    //   .getOne()
+
+    // return result
   }
 
-  async banUser(userId: number, manager?: EntityManager) {
+  async withdrawUser(userId: number, manager?: EntityManager) {
     let repo = null
     if (manager) {
       repo = manager.getRepository(UserEntity)
@@ -166,9 +175,9 @@ export class UsersRepository {
     return updateResult
   }
 
-  async modifyUser(
+  async updateUser(
     userId: number,
-    dto: UserDataType,
+    dto: AuthDTO.signUp,
     manager?: EntityManager,
   ) {
     let repo = null
