@@ -24,16 +24,19 @@ export class UsersService {
       throw new InternalServerErrorException(
         '이메일이 중복되었습니다.',
       )
-    const user = await this.usersRepository.signUp(dto)
-    const jwt = this.jwtService.sign({ id: user.id })
+    await this.usersRepository.signUp(dto)
+    const userInfo = await this.usersRepository.getUserIdByEmail(
+      dto.email,
+    )
 
+    const jwt = await this.jwtService.signAsync({
+      payload: userInfo.id,
+    })
     return jwt
   }
 
   async signIn(email: string, password: string) {
-    const isExist = await this.usersRepository.getUserIdByEmail(
-      email,
-    )
+    const isExist = await this.usersRepository.getUserIdByEmail(email)
 
     if (!isExist)
       throw new InternalServerErrorException(
@@ -49,9 +52,7 @@ export class UsersService {
     if (!isMatched)
       throw new InternalServerErrorException('패스워드가 틀렸습니다.')
 
-    const user = await this.usersRepository.getUserIdByEmail(
-      email,
-    )
+    const user = await this.usersRepository.getUserIdByEmail(email)
     const jwt = this.jwtService.signAsync({
       id: user.id,
     })
