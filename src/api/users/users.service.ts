@@ -30,7 +30,7 @@ export class UsersService {
     )
 
     const jwt = await this.jwtService.signAsync({
-      payload: userInfo.id,
+      id: userInfo.id,
     })
     return jwt
   }
